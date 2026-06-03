@@ -1,0 +1,24 @@
+- main [ref=e3]:
+  - generic [ref=e4]:
+    - generic:
+      - img
+    - generic [ref=e11]: THEODO
+    - paragraph [ref=e12]: pour Kamal. rien que pour toi.
+    - generic:
+      - generic:
+        - generic:
+          - generic: Kamal Maarouf
+          - generic: Il lit ton CV avant l'envoi 👀
+          - generic: RH · ENCG Casablanca
+          - generic: Acquisition IT · Theodo
+          - generic: Recrute en mode SCRUM 🏃
+          - generic: Connecte talent & orga ✓
+      - generic:
+        - generic:
+          - generic: Zouak Douae
+          - generic: Génie Info & IA · ENSA
+          - generic: IA le matin, Spring le soir ⚡
+          - generic: Résout avant que tu demandes 🔧
+          - generic: Curieuse · Rigoureuse · Tenace
+          - generic: Stage PFA · 2 mois · Theodo 🎯
+    - button "Découvrir mes projets →" [ref=e15] [cursor=pointer]
