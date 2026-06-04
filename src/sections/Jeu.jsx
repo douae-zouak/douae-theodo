@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useIsMobile } from "../hooks/useIsMobile";
 
 // ── Script (100% français, phrases complètes, infos vérifiées) ───────────────
 const SCRIPT = [
@@ -401,6 +402,7 @@ function Cursor() {
 
 // ── Main ─────────────────────────────────────────────────────────────────────
 export default function Jeu() {
+  const isMobile = useIsMobile();
   const [beatIndex, setBeatIndex] = useState(-1);
   const [typingActive, setTypingActive] = useState(false);
   const [currentText, setCurrentText] = useState("");
@@ -546,7 +548,7 @@ export default function Jeu() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          paddingBottom: 260,
+          paddingBottom: isMobile ? 180 : 260,
           paddingTop: 80,
         }}
       >
@@ -586,7 +588,7 @@ export default function Jeu() {
           bottom: 0,
           left: 0,
           right: 0,
-          height: 260,
+          height: isMobile ? 180 : 260,
           zIndex: 25,
           pointerEvents: "none",
         }}
@@ -609,7 +611,7 @@ export default function Jeu() {
               }}
             >
               <NotesStack notes={kamalNotes} side="left" />
-              <Character src="/man.png" flip={false} />
+              <Character src="/man.png" flip={false} height={isMobile ? 180 : 340} />
             </motion.div>
           )}
         </AnimatePresence>
@@ -632,7 +634,7 @@ export default function Jeu() {
               }}
             >
               <NotesStack notes={douaeNotes} side="right" />
-              <Character src="/girl.png" flip={true} />
+              <Character src="/girl.png" flip={true} height={isMobile ? 180 : 340} />
             </motion.div>
           )}
         </AnimatePresence>

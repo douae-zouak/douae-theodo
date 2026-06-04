@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import AnimatedText from "../components/AnimatedText";
+import { useIsMobile } from "../hooks/useIsMobile";
 
 function Reveal({ children, delay = 0 }) {
   const ref = useRef(null);
@@ -39,41 +40,43 @@ const VALUES = [
 ];
 
 function Row({ v, delay }) {
-  const ref    = useRef(null);
-  const inView = useInView(ref, { once: false, margin: "-60px" });
+  const ref      = useRef(null);
+  const inView   = useInView(ref, { once: false, margin: "-60px" });
   const [hovered, setHovered] = useState(false);
+  const isMobile = useIsMobile();
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, x: 48 }}
-      animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: 48 }}
+      initial={{ opacity: 0, x: isMobile ? 0 : 48, y: isMobile ? 24 : 0 }}
+      animate={inView ? { opacity: 1, x: 0, y: 0 } : { opacity: 0, x: isMobile ? 0 : 48, y: isMobile ? 24 : 0 }}
       transition={{ duration: 0.65, delay, ease: [0.16, 1, 0.3, 1] }}
       onHoverStart={() => setHovered(true)}
       onHoverEnd={() => setHovered(false)}
       style={{
         position: "relative",
         display: "grid",
-        gridTemplateColumns: "48px 200px 1fr 32px",
-        gap: "0 3rem",
-        alignItems: "center",
-        padding: "2.75rem 0",
+        gridTemplateColumns: isMobile ? "auto 1fr" : "48px 200px 1fr 32px",
+        gap: isMobile ? "0 1.25rem" : "0 3rem",
+        alignItems: isMobile ? "start" : "center",
+        padding: isMobile ? "1.75rem 0" : "2.75rem 0",
         borderBottom: "1px solid #1c1c1c",
         cursor: "default",
         transition: "background 0.2s",
         background: hovered ? "rgba(249,115,22,0.02)" : "transparent",
       }}
     >
-      {/* Row number */}
-      <span style={{
-        fontFamily: "var(--mono)", fontSize: 11,
-        color: hovered ? "rgba(249,115,22,0.5)" : "#282828",
-        letterSpacing: "0.1em",
-        transition: "color 0.25s",
-      }}>{v.num}</span>
+      {/* Row number — desktop only */}
+      {!isMobile && (
+        <span style={{
+          fontFamily: "var(--mono)", fontSize: 11,
+          color: hovered ? "rgba(249,115,22,0.5)" : "#282828",
+          letterSpacing: "0.1em", transition: "color 0.25s",
+        }}>{v.num}</span>
+      )}
 
       {/* Stat + badge */}
-      <div>
+      <div style={{ flexShrink: 0 }}>
         <motion.div
           animate={hovered
             ? { textShadow: "0 0 28px rgba(249,115,22,0.55)" }
@@ -81,7 +84,7 @@ function Row({ v, delay }) {
           transition={{ duration: 0.3 }}
           style={{
             fontFamily: "var(--display)",
-            fontSize: "clamp(2.8rem, 4.5vw, 5rem)",
+            fontSize: isMobile ? "clamp(2rem,10vw,2.8rem)" : "clamp(2.8rem, 4.5vw, 5rem)",
             fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1,
             color: "var(--orange)",
           }}
@@ -103,7 +106,8 @@ function Row({ v, delay }) {
         }}>{v.title}</div>
         <div style={{
           fontFamily: "var(--mono)", fontSize: 12.5,
-          color: "var(--muted)", lineHeight: 1.75, maxWidth: 520,
+          color: "var(--muted)", lineHeight: 1.75,
+          maxWidth: isMobile ? "100%" : 520,
         }}>{v.text}</div>
       </div>
 

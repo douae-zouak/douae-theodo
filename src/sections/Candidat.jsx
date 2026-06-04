@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import AnimatedText from "../components/AnimatedText";
+import { useIsMobile } from "../hooks/useIsMobile";
 
 function Reveal({ children, delay = 0, fromX = 0, fromY = 28 }) {
   const ref = useRef(null);
@@ -22,6 +23,7 @@ const POINTS = [
 ];
 
 export default function Candidat() {
+  const isMobile     = useIsMobile();
   const quoteRef     = useRef(null);
   const quoteInView  = useInView(quoteRef, { once: false, margin: "-60px" });
   const pointsRef    = useRef(null);
@@ -62,7 +64,8 @@ export default function Candidat() {
       />
 
       <div style={{
-        display:"grid", gridTemplateColumns:"1fr 1fr",
+        display:"grid",
+        gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
         gap:"clamp(2rem,6vw,6rem)", marginTop:"4rem", alignItems:"start",
       }}>
 

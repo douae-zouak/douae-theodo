@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import AnimatedText from "../components/AnimatedText";
+import { useIsMobile } from "../hooks/useIsMobile";
 
 function Reveal({ children, delay = 0 }) {
   const ref = useRef(null);
@@ -191,11 +192,33 @@ function TimelineCard({ project, inView }) {
 }
 
 /* ─── Timeline item (one row) ────────────────────────────────────────────────── */
-function TimelineItem({ project }) {
+function TimelineItem({ project, isMobile }) {
   const ref    = useRef(null);
   const inView = useInView(ref, { once:false, margin:"-80px" });
   const isLeft = project.side === "left";
 
+  /* ── Mobile: single column with left dot ── */
+  if (isMobile) {
+    return (
+      <div ref={ref} style={{ display:"grid", gridTemplateColumns:"28px 1fr", gap:"0 1rem", alignItems:"start" }}>
+        <div style={{ display:"flex", flexDirection:"column", alignItems:"center", paddingTop:6 }}>
+          <motion.div
+            initial={{ scale:0, opacity:0 }}
+            animate={inView ? { scale:1, opacity:1 } : { scale:0, opacity:0 }}
+            transition={{ duration:0.4, ease:[0.16,1,0.3,1] }}
+            style={{
+              width:10, height:10, borderRadius:"50%", flexShrink:0,
+              background:"var(--orange)",
+              boxShadow:"0 0 0 4px rgba(249,115,22,0.12), 0 0 14px rgba(249,115,22,0.4)",
+            }}
+          />
+        </div>
+        <TimelineCard project={project} inView={inView} />
+      </div>
+    );
+  }
+
+  /* ── Desktop: zigzag ── */
   return (
     <div ref={ref} style={{
       display:"grid",
@@ -203,12 +226,9 @@ function TimelineItem({ project }) {
       columnGap:"1.5rem",
       alignItems:"center",
     }}>
-      {/* Left slot */}
       <div style={{ display:"flex", justifyContent:"flex-end" }}>
         {isLeft && <TimelineCard project={project} inView={inView} />}
       </div>
-
-      {/* Center — dot on the line */}
       <div style={{ display:"flex", justifyContent:"center", alignItems:"center", position:"relative", zIndex:3 }}>
         <motion.div
           initial={{ scale:0, opacity:0 }}
@@ -222,8 +242,6 @@ function TimelineItem({ project }) {
           }}
         />
       </div>
-
-      {/* Right slot */}
       <div>
         {!isLeft && <TimelineCard project={project} inView={inView} />}
       </div>
@@ -233,6 +251,7 @@ function TimelineItem({ project }) {
 
 /* ─── Section ────────────────────────────────────────────────────────────────── */
 export default function Methode() {
+  const isMobile    = useIsMobile();
   const timelineRef = useRef(null);
 
   const { scrollYProgress } = useScroll({
@@ -248,7 +267,6 @@ export default function Methode() {
       backgroundColor:"var(--bg)",
       position:"relative", overflow:"hidden",
     }}>
-      {/* Ambient */}
       <div style={{
         position:"absolute", inset:0, pointerEvents:"none",
         background:"radial-gradient(ellipse 50% 40% at 100% 0%, rgba(249,115,22,0.04) 0%, transparent 60%)",
@@ -264,33 +282,39 @@ export default function Methode() {
         }}
       />
 
-      {/* Timeline */}
       <div ref={timelineRef} style={{ position:"relative", marginTop:"4rem" }}>
 
-        {/* Track (faint grey) */}
-        <div style={{
-          position:"absolute", left:"50%", top:0, bottom:0,
-          width:1, transform:"translateX(-50%)",
-          background:"#1c1c1c", zIndex:0,
-        }}/>
+        {/* Track + animated line — desktop only */}
+        {!isMobile && <>
+          <div style={{
+            position:"absolute", left:"50%", top:0, bottom:0,
+            width:1, transform:"translateX(-50%)",
+            background:"#1c1c1c", zIndex:0,
+          }}/>
+          <motion.div style={{
+            position:"absolute", left:"50%", top:0,
+            width:1, height:"100%",
+            transform:"translateX(-50%)",
+            background:"linear-gradient(180deg, var(--orange) 0%, rgba(249,115,22,0.25) 100%)",
+            scaleY:lineScaleY, transformOrigin:"top", zIndex:1,
+          }}/>
+        </>}
 
-        {/* Animated orange line */}
-        <motion.div style={{
-          position:"absolute", left:"50%", top:0,
-          width:1, height:"100%",
-          transform:"translateX(-50%)",
-          background:"linear-gradient(180deg, var(--orange) 0%, rgba(249,115,22,0.25) 100%)",
-          scaleY:lineScaleY, transformOrigin:"top",
-          zIndex:1,
-        }}/>
+        {/* Mobile: left border line */}
+        {isMobile && (
+          <div style={{
+            position:"absolute", left:13, top:0, bottom:0,
+            width:1, background:"#1c1c1c", zIndex:0,
+          }}/>
+        )}
 
-        {/* Items */}
         <div style={{
           display:"flex", flexDirection:"column",
-          gap:"3.5rem", position:"relative", zIndex:2,
+          gap: isMobile ? "2rem" : "3.5rem",
+          position:"relative", zIndex:2,
         }}>
           {PROJECTS.map(p => (
-            <TimelineItem key={p.num} project={p} />
+            <TimelineItem key={p.num} project={p} isMobile={isMobile} />
           ))}
         </div>
       </div>

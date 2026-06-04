@@ -88,6 +88,17 @@ body::before {
 }
 .tag.highlight { color: var(--orange); border-color: var(--orange); opacity: 0.8; }
 
+/* ── Mobile ─────────────────────────────────────────────────────────────────── */
+@media (max-width: 767px) {
+  section {
+    padding-top: 4rem !important;
+    padding-bottom: 4rem !important;
+  }
+  .section-title {
+    font-size: clamp(1.6rem, 7vw, 2.4rem) !important;
+  }
+}
+
 /* Blink */
 @keyframes blinkAnim { 0%,100%{opacity:1} 50%{opacity:0} }
 .blink { animation: blinkAnim 1s step-end infinite; }

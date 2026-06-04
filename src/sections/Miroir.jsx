@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import AnimatedText from "../components/AnimatedText";
+import { useIsMobile } from "../hooks/useIsMobile";
 
 /* ─── Blocks ─────────────────────────────────────────────────────────────────── */
 const BLOCKS = [
@@ -179,14 +180,16 @@ function Block({ data }) {
   }
 
   /* Big lines — word-by-word animation */
+  const isMobile = useIsMobile();
   return (
     <div ref={ref} style={{ marginBottom:6 }}>
       {data.lines.map((line,i) => (
         <AnimatedText key={i} text={line.text} as="p"
           delay={i * 0.08} stagger={0.04} margin="-40px"
           style={{
-            margin:0, lineHeight:0.94, whiteSpace:"nowrap",
-            fontSize:"clamp(40px,6.5vw,90px)",
+            margin:0, lineHeight:0.94,
+            whiteSpace: isMobile ? "normal" : "nowrap",
+            fontSize: isMobile ? "clamp(32px,9vw,60px)" : "clamp(40px,6.5vw,90px)",
             fontWeight:900, letterSpacing:"-0.035em",
             color:
               line.color==="orange"?"var(--orange)"
@@ -202,27 +205,23 @@ function Block({ data }) {
 
 /* ─── Main section ───────────────────────────────────────────────────────────── */
 export default function Miroir() {
+  const isMobile = useIsMobile();
   return (
     <>
       <section id="miroir" style={{
         backgroundColor:"var(--bg)",
-        padding:"100px clamp(24px,8vw,100px) 80px",
+        padding: isMobile ? "60px clamp(20px,6vw,48px) 48px" : "100px clamp(24px,8vw,100px) 80px",
         position:"relative", overflow:"hidden",
       }}>
         <div style={{
           position:"absolute", inset:0, pointerEvents:"none",
           background:"radial-gradient(ellipse 55% 60% at 50% 50%, rgba(249,115,22,0.07) 0%, transparent 65%)",
         }}/>
-        <div style={{
-          position:"absolute", right:0, top:"20%", height:300,
-          background:"radial-gradient(circle, rgba(249,115,22,0.08) 0%, transparent 70%)",
-          filter:"blur(40px)", pointerEvents:"none",
-        }}/>
 
         <div style={{
           position:"relative", zIndex:2,
           display:"grid",
-          gridTemplateColumns:"max-content 1fr",
+          gridTemplateColumns: isMobile ? "1fr" : "max-content 1fr",
           gap:"clamp(32px,5vw,80px)",
           alignItems:"start",
         }}>
@@ -231,24 +230,26 @@ export default function Miroir() {
             {BLOCKS.map(b => <Block key={b.id} data={b} />)}
           </div>
 
-          {/* RIGHT — three cards in a staggered zigzag */}
-          <div style={{
-            position:"sticky", top:"calc(50vh - 250px)",
-            alignSelf:"flex-start",
-            display:"grid",
-            gridTemplateColumns:"1fr 1fr",
-            gap:14,
-          }}>
-            <div style={{ gridColumn:1, gridRow:1 }}>
-              <TermCard card={TERM_CARDS[0]} index={0} />
+          {/* RIGHT — three cards (hidden on mobile) */}
+          {!isMobile && (
+            <div style={{
+              position:"sticky", top:"calc(50vh - 250px)",
+              alignSelf:"flex-start",
+              display:"grid",
+              gridTemplateColumns:"1fr 1fr",
+              gap:14,
+            }}>
+              <div style={{ gridColumn:1, gridRow:1 }}>
+                <TermCard card={TERM_CARDS[0]} index={0} />
+              </div>
+              <div style={{ gridColumn:2, gridRow:2 }}>
+                <TermCard card={TERM_CARDS[1]} index={1} />
+              </div>
+              <div style={{ gridColumn:1, gridRow:3 }}>
+                <TermCard card={TERM_CARDS[2]} index={2} />
+              </div>
             </div>
-            <div style={{ gridColumn:2, gridRow:2 }}>
-              <TermCard card={TERM_CARDS[1]} index={1} />
-            </div>
-            <div style={{ gridColumn:1, gridRow:3 }}>
-              <TermCard card={TERM_CARDS[2]} index={2} />
-            </div>
-          </div>
+          )}
         </div>
       </section>
 
