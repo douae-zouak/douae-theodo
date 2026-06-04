@@ -35,7 +35,7 @@ const SCRIPT = [
   },
   {
     char: "douae",
-    text: "Elle, c'est Zouak Douae.",
+    text: "Elle, c'est Douae Zouak.",
     note: "Zouak Douae",
   },
   {
@@ -409,6 +409,17 @@ export default function Jeu() {
   const [kamalIn, setKamalIn] = useState(false);
   const [douaeIn, setDouaeIn] = useState(false);
   const [showCta, setShowCta] = useState(false);
+
+  // Lock scroll until animation is done (only when starting from the top)
+  useEffect(() => {
+    if (window.scrollY > 50) return;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = ""; };
+  }, []);
+
+  useEffect(() => {
+    if (showCta) document.body.style.overflow = "";
+  }, [showCta]);
 
   // Kamal glisse depuis la gauche, puis la frappe démarre
   useEffect(() => {
