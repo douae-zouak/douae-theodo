@@ -187,9 +187,9 @@ function Block({ data }) {
         <AnimatedText key={i} text={line.text} as="p"
           delay={i * 0.08} stagger={0.04} margin="-40px"
           style={{
-            margin:0, lineHeight:0.94,
+            margin:0, lineHeight:1.0,
             whiteSpace: isMobile ? "normal" : "nowrap",
-            fontSize: isMobile ? "clamp(32px,9vw,60px)" : "clamp(40px,6.5vw,90px)",
+            fontSize: isMobile ? "clamp(28px,8vw,48px)" : "clamp(30px,4vw,58px)",
             fontWeight:900, letterSpacing:"-0.035em",
             color:
               line.color==="orange"?"var(--orange)"
