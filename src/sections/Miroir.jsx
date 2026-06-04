@@ -108,7 +108,7 @@ function TermCard({ card, index = 0 }) {
       }}
       style={{
         background:"#1a1a1a", border:"1px solid #2a2a2a",
-        borderRadius:4, overflow:"hidden", width:200,
+        borderRadius:4, overflow:"hidden", width:"min(200px,100%)",
         boxShadow:"0 0 28px rgba(249,115,22,0.1), 0 6px 24px rgba(0,0,0,0.5)",
       }}
     >
@@ -211,22 +211,22 @@ export default function Miroir() {
       <section id="miroir" style={{
         backgroundColor:"var(--bg)",
         padding: isMobile ? "60px clamp(20px,6vw,48px) 48px" : "100px clamp(24px,8vw,100px) 80px",
-        position:"relative", overflow:"hidden",
+        position:"relative",
       }}>
         <div style={{
-          position:"absolute", inset:0, pointerEvents:"none",
+          position:"absolute", inset:0, pointerEvents:"none", overflow:"hidden",
           background:"radial-gradient(ellipse 55% 60% at 50% 50%, rgba(249,115,22,0.07) 0%, transparent 65%)",
         }}/>
 
         <div style={{
           position:"relative", zIndex:2,
           display:"grid",
-          gridTemplateColumns: isMobile ? "1fr" : "max-content 1fr",
+          gridTemplateColumns: isMobile ? "1fr" : "minmax(0,max-content) minmax(0,1fr)",
           gap:"clamp(32px,5vw,80px)",
           alignItems:"start",
         }}>
           {/* LEFT — text */}
-          <div>
+          <div style={{ minWidth: 0 }}>
             {BLOCKS.map(b => <Block key={b.id} data={b} />)}
           </div>
 
@@ -234,7 +234,7 @@ export default function Miroir() {
           {!isMobile && (
             <div style={{
               position:"sticky", top:"calc(50vh - 250px)",
-              alignSelf:"flex-start",
+              alignSelf:"flex-start", minWidth: 0,
               display:"grid",
               gridTemplateColumns:"1fr 1fr",
               gap:14,
