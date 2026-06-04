@@ -548,7 +548,7 @@ export default function Jeu() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          paddingBottom: isMobile ? 180 : 260,
+          paddingBottom: isMobile ? 260 : 260,
           paddingTop: 80,
         }}
       >
@@ -585,10 +585,10 @@ export default function Jeu() {
       <div
         style={{
           position: "absolute",
-          bottom: 0,
+          bottom: isMobile ? 50 : 0,
           left: 0,
           right: 0,
-          height: isMobile ? 180 : 260,
+          height: isMobile ? 220 : 260,
           zIndex: 25,
           pointerEvents: "none",
         }}
@@ -611,7 +611,7 @@ export default function Jeu() {
               }}
             >
               <NotesStack notes={kamalNotes} side="left" />
-              <Character src="/man.png" flip={false} height={isMobile ? 180 : 340} />
+              <Character src="/man.png" flip={false} height={isMobile ? 150 : 340} />
             </motion.div>
           )}
         </AnimatePresence>
@@ -634,7 +634,7 @@ export default function Jeu() {
               }}
             >
               <NotesStack notes={douaeNotes} side="right" />
-              <Character src="/girl.png" flip={true} height={isMobile ? 180 : 340} />
+              <Character src="/girl.png" flip={true} height={isMobile ? 150 : 340} />
             </motion.div>
           )}
         </AnimatePresence>
